@@ -34,6 +34,7 @@
 
     mysqli_query($bdd, $req);
 
-    header('produit_admin.php');
+    
+    echo "<meta http-equiv='refresh' content='0;url=produit_admin.php'>";
 
 ?>

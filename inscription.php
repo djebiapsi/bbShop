@@ -66,13 +66,14 @@
 
         $_SESSION['inscrit'] = true;
 
-        header('Location: inscriptionform.php');
+        echo "<meta http-equiv='refresh' content='0;url=inscriptionform.php'>";
 
      }else {
 
         $_SESSION['inscrit'] = false;
         
-        header('Location: inscriptionform.php');
+        echo "<meta http-equiv='refresh' content='0;url=inscriptionform.php'>";
+
      }
 
 

@@ -36,26 +36,26 @@
             $req = "select * from `infoperso` where id = $id";
             $curseur = mysqli_query($bdd,$req);
             $row = mysqli_fetch_assoc($curseur);
-            var_dump($_SESSION);
+            //var_dump($_SESSION);
             $_SESSION["name"] = $row["nom"];
             $_SESSION["address"] = $row["adresse"];
             $_SESSION["phone"] = $row["numTel"];
 
             $curseur = mysqli_query($bdd,$req);
             if ($_SESSION["role"] == 1) {
-                header('Location: Accueil.php');
+                echo "<meta http-equiv='refresh' content='0;url=Accueil.php'>";
             }elseif ($_SESSION["role"] == 2) {
-                header('Location: bbshop_admin');
+                echo "<meta http-equiv='refresh' content='0;url=bbshop_admin'>";
             }
         }else {
             $_SESSION["error"] = true;
-            header('Location: connexion.php');
+            echo "<meta http-equiv='refresh' content='0;url=connexion.php'>";
         }
             
 
     }else {
         $_SESSION["error"] = true;
-        header('Location: connexion.php');
+        echo "<meta http-equiv='refresh' content='0;url=connexion.php'>";
     }
 
 ?>
