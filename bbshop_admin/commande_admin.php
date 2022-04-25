@@ -166,7 +166,7 @@
 
                                                     <?php
 
-                                                        $req = "SELECT r.id, u.email, r.statue, r.taille, r.date_order, p.refProduit, ip.numTel FROM `reservation` AS r INNER JOIN `produit` AS p on r.idProduit = p.id INNER JOIN `user` AS u ON r.idClient = u.id INNER JOIN infoperso AS ip ON R.idClient = ip.id;";
+                                                        $req = "SELECT r.id, u.email, r.statue, r.taille, r.date_order, p.refProduit, ip.numTel FROM `reservation` AS r JOIN `produit` AS p on r.idProduit = p.id JOIN `user` AS u ON r.idClient = u.id JOIN infoperso AS ip ON r.`idClient` = ip.id";
 
                                                         $curseur = mysqli_query($bdd,$req);
 
