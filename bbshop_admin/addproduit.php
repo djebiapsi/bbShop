@@ -1,5 +1,7 @@
 <?php
+    include('auth.php');
     include('../bdconnect.php');
+    
 
     var_dump($_FILES);
 

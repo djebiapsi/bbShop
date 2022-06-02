@@ -66,13 +66,13 @@
 
         $_SESSION['inscrit'] = true;
 
-        echo "<meta http-equiv='refresh' content='0;url=Inscriptionform.php'>";
+        echo "<meta http-equiv='refresh' content='0;url=inscriptionform.php'>";
 
      }else {
 
         $_SESSION['inscrit'] = false;
         
-        echo "<meta http-equiv='refresh' content='0;url=Inscriptionform.php'>";
+        echo "<meta http-equiv='refresh' content='0;url=inscriptionform.php'>";
 
      }
 

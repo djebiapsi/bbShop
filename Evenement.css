@@ -1,0 +1,25 @@
+ .u-section-1 {
+  background-image: linear-gradient(#478ac9, #db545a);
+}
+
+.u-section-1 .u-sheet-1 {
+  min-height: 451px;
+}
+
+.u-section-1 .u-text-1 {
+  margin: 57px 0 0 11px;
+}
+
+.u-section-1 .u-text-2 {
+  margin: -3px 0 0;
+}
+
+.u-section-1 .u-text-3 {
+  margin: 31px 0 45px;
+}
+
+@media (max-width: 1199px) {
+  .u-section-1 .u-text-1 {
+    margin-left: 0;
+  }
+}

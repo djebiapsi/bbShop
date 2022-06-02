@@ -1,3 +1,53 @@
+<?php
+include('auth.php');
+
+
+include('../bdconnect.php');
+
+//Pagination
+
+$limit = 5;
+// Get total records
+$sql = "SELECT count(contact_id) AS id FROM `tblcontact`";
+$req = mysqli_query($bdd, $sql);
+$allRecrods = mysqli_fetch_assoc($req)["id"];
+
+
+
+// Calculate total pages
+$totoalPages = ceil($allRecrods / $limit);
+
+$page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? $_GET['page'] : 1;
+$prev = $page - 1;
+$next = $page + 1;
+// Offset
+$paginationStart = ($page - 1) * $limit;
+// Limit query
+$sql = "SELECT * FROM `tblcontact` LIMIT $paginationStart, $limit";
+$contacts = mysqli_query($bdd, $sql);
+
+if (isset($_POST["delete"])) {
+
+    $id = $_POST["delete"];
+    echo $id;
+    $delete = "DELETE FROM `tblcontact` WHERE contact_id = $id";
+    mysqli_query($bdd, $delete);
+    unset($_POST["delete"]);
+}
+
+//Recherche
+
+if (isset($_POST["valider"])) {
+    $search = $_POST["keywords"];
+    $sql = "SELECT * FROM `tblcontact` WHERE user_name LIKE '%$search%' OR user_email LIKE '%$search%'";
+    $contacts = mysqli_query($bdd, $sql);
+    /* $allRecrods = count(mysqli_fetch_assoc($contacts));
+    $totoalPages = ceil($allRecrods / $limit); */
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -18,15 +68,15 @@
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="color: var(--bs-gray-900);background: var(--bs-body-color);">
             <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-basketball-ball"></i></div>
+                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
                     <div class="sidebar-brand-text mx-3"></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="index.php"><i class="fas fa-tachometer-alt"></i><span>Tableau de bord</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="produits_admin.php"><i class="fa fa-shopping-basket"></i><span>Produits</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="user_admin.php"><i class="fa fa-user"></i><span>Utilisateurs</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="commande_admin.php"><i class="fa fa-cart-arrow-down"></i><span>Commandes</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-tachometer-alt"></i><span>Tableau de bord</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="produits_admin.html"><i class="fa fa-shopping-basket"></i><span>Produits</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="user_admin.html"><i class="fa fa-user"></i><span>Utilisateurs</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="commande_admin.html"><i class="fa fa-cart-arrow-down"></i><span>Commandes</span></a></li>
                     <li class="nav-item"><a class="nav-link active" href="contact_admin.html"><i class="fa fa-envelope"></i><span>Contact</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="nouvel_admin.html"><i class="fa fa-users"></i><span>Nouvel administrateur</span></a></li>
                 </ul>
@@ -98,7 +148,11 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="col-md-12">
-                                        <div class="form-group pull-right col-lg-4"><input type="text" class="search form-control" placeholder="Recherche par Email..."></div><span class="counter pull-right"></span>
+                                        <form name="" method="POST" action="#">
+                                            <input type="text" name="keywords" value="" placeholder="Recherche par nom" />
+                                            <input type="submit" name="valider" value="Rechercher" />
+                                        </form>
+
                                         <div class="table-responsive table table-hover table-bordered results">
                                             <table class="table table-hover table-bordered">
                                                 <thead class="bill-header cs">
@@ -111,18 +165,71 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="warning no-result">
-                                                        <td colspan="12"><i class="fa fa-warning"></i>&nbsp; No Result !!!</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01</td>
-                                                        <td>kouate bryan</td>
-                                                        <td>kouatebryan@gmail.com</td>
-                                                        <td>Bonjour,....</td>
-                                                        <td><button class="btn btn-danger" style="margin-left: 5px;" type="submit"><i class="fa fa-trash" style="font-size: 15px;"></i></button></td>
-                                                    </tr>
+
+
+                                                    <?php
+                                                    if (mysqli_num_rows($contacts) == 0) {
+                                                        echo '
+                                                            <tr colspan="5" align="center">
+                                                                <td colspan="12">
+                                                                    <i class="fa fa-warning"></i>
+                                                                    &nbsp; Aucun resultat !!!
+                                                                </td>
+                                                            </tr>
+                                                        ';
+                                                    } else {
+
+                                                        while ($row = mysqli_fetch_assoc($contacts)) {
+                                                            $id = $row["contact_id"];
+                                                            $name = $row["user_name"];
+                                                            $email = $row["user_email"];
+                                                            $content = $row["content"];
+
+                                                            echo "<tr>
+                                                        <td>$id</td>
+                                                        <td>$name</td>
+                                                        <td>$email</td>
+                                                        <td>$content</td>
+                                                        <td><button form = 'delete$id' class='btn btn-danger' style='margin-left: 5px;' type='submit'><i class='fa fa-trash' style='font-size: 15px;'></i></button></td>
+                                                        <form id='delete$id' method='post'><input type='hidden' name='delete' value = $id></form>
+                                                        </tr>";
+                                                        }
+                                                    }
+
+                                                    ?>
+
+
                                                 </tbody>
                                             </table>
+                                            <nav aria-label="Page navigation example mt-5">
+                                                <ul class="pagination justify-content-center">
+                                                    <li class="page-item <?php if ($page <= 1) {
+                                                                                echo 'disabled';
+                                                                            } ?>">
+                                                        <a class="page-link" href="<?php if ($page <= 1) {
+                                                                                        echo '#';
+                                                                                    } else {
+                                                                                        echo "?page=" . $prev;
+                                                                                    } ?>">Previous</a>
+                                                    </li>
+                                                    <?php for ($i = 1; $i <= $totoalPages; $i++) : ?>
+                                                        <li class="page-item <?php if ($page == $i) {
+                                                                                    echo 'active';
+                                                                                } ?>">
+                                                            <a class="page-link" href="contact_admin.php?page=<?= $i; ?>"> <?= $i; ?> </a>
+                                                        </li>
+                                                    <?php endfor; ?>
+                                                    <li class="page-item <?php if ($page >= $totoalPages) {
+                                                                                echo 'disabled';
+                                                                            } ?>">
+                                                        <a class="page-link" href="<?php if ($page >= $totoalPages) {
+                                                                                        echo '#';
+                                                                                    } else {
+                                                                                        echo "?page=" . $next;
+                                                                                    } ?>">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
                                         </div>
                                     </div>
                                 </div>

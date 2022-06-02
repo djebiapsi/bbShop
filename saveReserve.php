@@ -11,6 +11,7 @@
         $ajouter = "INSERT INTO `reservation`(`idClient`, `idProduit`, `taille`, `statue`) VALUES ('$idC','$idP','$taille','wait')";
         mysqli_query($bdd, $ajouter);
 
+        //header('Location: bbshop/Accueil.php');
 
         echo "<meta http-equiv='refresh' content='0;url=Accueil.php'>";
 

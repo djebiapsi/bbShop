@@ -1,3 +1,26 @@
+<?php
+include('auth.php');
+include('../bdconnect.php');
+
+
+if (isset($_POST['updateContact'])) {
+    $address = $_POST['address'];
+    $email = $_POST['email'];
+    $phoneNumber = $_POST['phoneNumber'];
+    $link = $_POST['link'];
+    $query = "UPDATE infocontact set adresse = ?, email = ?, tel = ?, link = ? where id=1";
+    $queryStatement = mysqli_prepare($bdd, $query);
+    mysqli_stmt_bind_param($queryStatement, "ssss", $address, $email, $phoneNumber, $link);
+    $res = mysqli_stmt_execute($queryStatement);
+    //die(mysqli_error($bdd));
+    if ($res) {
+        $success = "Modification reussie avec success !";
+    } else {
+        $error = "Une erreur est survenue lors de la modification !";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -6,7 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard - Brand</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
@@ -18,17 +41,17 @@
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="color: var(--bs-gray-900);background: var(--bs-body-color);">
             <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-basketball-ball"></i></div>
+                    <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
                     <div class="sidebar-brand-text mx-3"></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="index.php"><i class="fas fa-tachometer-alt"></i><span>Tableau de bord</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="produits_admin.php"><i class="fa fa-shopping-basket"></i><span>Produits</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="user_admin.php"><i class="fa fa-user"></i><span>Utilisateurs</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="commande_admin.php"><i class="fa fa-cart-arrow-down"></i><span>Commandes</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-tachometer-alt"></i><span>Tableau de bord</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="produits_admin.html"><i class="fa fa-shopping-basket"></i><span>Produits</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="user_admin.html"><i class="fa fa-user"></i><span>Utilisateurs</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="commande_admin.html"><i class="fa fa-cart-arrow-down"></i><span>Commandes</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="contact_admin.html"><i class="fa fa-envelope"></i><span>Contact</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="nouvel_admin.html"><i class="fa fa-users"></i><span>Nouvel administrateur</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact_info.html"><i class="fa fa-users"></i><span>Information de contact</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"></div>
             </div>
@@ -90,41 +113,41 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
+                    <?php
+                    if (isset($success)) {
+                        echo '
+                            <div class="alert alert-success" role="alert">
+                               ' . $success . '
+                            </div>';
+                    }
+
+                    if (isset($error)) {
+                        echo '
+                            <div class="alert alert-danger" role="alert">
+                               ' . $error . '
+                            </div>';
+                    }
+                    ?>
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Nouvel administrateur</h3>
+                        <h3 class="text-dark mb-0">Information de contact</h3>
                     </div>
                     <div class="row">
                         <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="col-md-12">
-                                        <div class="form-group pull-right col-lg-4"><input type="text" class="search form-control" placeholder="Recherche par Email..."></div><span class="counter pull-right"></span>
-                                        <div class="table-responsive table table-hover table-bordered results">
-                                            <table class="table table-hover table-bordered">
-                                                <thead class="bill-header cs">
-                                                    <tr>
-                                                        <th id="trs-hd-1">ID Admin</th>
-                                                        <th id="trs-hd-2">Nom</th>
-                                                        <th id="trs-hd-3" class="col-lg-3">Email</th>
-                                                        <th id="trs-hd-9">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr class="warning no-result">
-                                                        <td colspan="12"><i class="fa fa-warning"></i>&nbsp; No Result !!!</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01</td>
-                                                        <td>kouate bryan</td>
-                                                        <td>kouatebryan@gmail.com</td>
-                                                        <td><button class="btn btn-danger" style="margin-left: 5px;" type="submit"><i class="fa fa-trash" style="font-size: 15px;"></i></button></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                            <form action="#" method="POST">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <label class="form-label">Numéro de téléphone</label>
+                                        <input type="text" name="phoneNumber" class="form-control">
+                                        <label class="form-label">Adresse</label>
+                                        <input type="text" name="address" class="form-control">
+                                        <label class="form-label">Link</label>
+                                        <input type="text" name="link" class="form-control">
+                                        <label class="form-label">Email</label>
+                                        <input type="text" name="email" class="form-control">
+                                        <button class="btn btn-primary my-2" name="updateContact" type="submit">Mettre à jour</button>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
