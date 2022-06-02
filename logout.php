@@ -3,6 +3,6 @@
     session_start();
     session_unset();
     
-    echo "<meta http-equiv='refresh' content='0;url=Acceuil.php'>";
+    echo "<meta http-equiv='refresh' content='0;url=Accueil.php'>";
 
 ?>

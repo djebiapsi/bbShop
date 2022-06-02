@@ -22,6 +22,28 @@
         unset($_POST['downgrade']);
     }
 
+    if (isset($_POST["delete"])) {
+        $id = $_POST['delete'];
+        
+        $req ="DELETE FROM `user` WHERE id = $id;";
+
+        mysqli_query($bdd, $req);
+        
+        $req ="DELETE FROM `reservation` WHERE `idClient`= $id;";
+
+        mysqli_query($bdd, $req);
+
+        $req ="DELETE FROM `user_sign_in` WHERE `user_id`= $id;";
+
+        mysqli_query($bdd, $req);
+
+        $req ="DELETE FROM `infoperso` WHERE `id` = $id;";
+
+        mysqli_query($bdd, $req);
+
+        unset($_POST['delete']);
+    }
+
 
 ?>
 
@@ -178,9 +200,10 @@
                                                                 <td>$adresse</td>
                                                                 <td>$numTel</td>
                                                                 <td>$date</td>
-                                                                <td><button form='upgrade$id' class='btn btn-primary btn-success' type='submit'><i class='fa fa-arrow-up'></i></button><button class='btn btn-danger' style='margin-left: 5px;' type='submit'><i class='fa fa-trash' style='font-size: 15px;'></i></button></td>
+                                                                <td><button form='upgrade$id' class='btn btn-primary btn-success' type='submit'><i class='fa fa-arrow-up'></i></button><button class='btn btn-danger' form='delete$id' style='margin-left: 5px;' type='submit'><i class='fa fa-trash' style='font-size: 15px;'></i></button></td>
                                                             </tr>
                                                                 <form id='upgrade$id' method='post'><input type='hidden' name='upgrade' value=$id></form>
+                                                                <form id='delete$id' method='post'><input type='hidden' name='delete' value=$id></form>
                                                             ";
                                                             }elseif ($roles == 2) {
                                                                 echo "<tr>
@@ -191,9 +214,10 @@
                                                                 <td>$adresse</td>
                                                                 <td>$numTel</td>
                                                                 <td>$date</td>
-                                                                <td><button form='downgrade$id' class='btn btn-warning' type='submit'><i class='fa fa-arrow-down'></i></button><button class='btn btn-danger' style='margin-left: 5px;' type='submit'><i class='fa fa-trash' style='font-size: 15px;'></i></button></td>
+                                                                <td><button form='downgrade$id' class='btn btn-warning' type='submit'><i class='fa fa-arrow-down'></i></button><button class='btn btn-danger' form='delete$id' style='margin-left: 5px;' type='submit'><i class='fa fa-trash' style='font-size: 15px;'></i></button></td>
                                                             </tr>
                                                                 <form id='downgrade$id' method='post'><input type='hidden' name='downgrade' value=$id></form>
+                                                                <form id='delete$id' method='post'><input type='hidden' name='delete' value=$id></form>
                                                             ";
                                                             }
 
